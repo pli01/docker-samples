@@ -1,0 +1,39 @@
+- hosts: localhost
+#JENKINS_PORT_8080_TCP_ADDR=172.17.0.2
+#JENKINS_PORT_8080_TCP_PORT=8080
+
+  vars:
+    nginx_conf_dir: "/etc/nginx"
+  tasks:
+    - yum: pkg=nginx state=present
+      when: ansible_os_family == "RedHat"
+
+    - apt: update_cache=yes name="nginx" state=present
+      when: ansible_os_family == "Debian"
+
+    - name: daemon off
+      lineinfile: dest={{nginx_conf_dir}}/nginx.conf line="daemon off;"
+
+    - name: Apply index.html from template
+      template: 
+         src: index.j2 
+         dest: /var/www/html/index.html
+         mode: "0644"
+
+    - name: copy site
+      copy: 
+         src: "{{ item }}.conf"
+         dest: "{{nginx_conf_dir}}/sites-available/{{ item }}.conf"
+         mode: "0644"
+      with_items:
+        - "kibana"
+
+    - name: Remove links for sites-enabled
+      file: state=absent path={{nginx_conf_dir}}/sites-enabled/{{ item }}
+      with_items:
+        - "default"
+
+    - name: Create links for sites-enabled
+      file: state=link src={{nginx_conf_dir}}/sites-available/{{ item }}.conf dest={{nginx_conf_dir}}/sites-enabled/{{ item }}.conf
+      with_items:
+        - "kibana"

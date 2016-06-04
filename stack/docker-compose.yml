@@ -1,0 +1,25 @@
+jenkins:
+  image: jenkins:latest
+  environment:
+    JAVA_OPTS: "-Djava.awt.headless=true"
+    JENKINS_OPTS: "--prefix=/jenkins"
+  ports:
+    - "8080:8080"
+    - "50000:50000"
+ 
+elk:
+  image: elk:latest
+  ports:
+    - "5601:5601"
+    - "9200:9200"
+    - "5044:5044"
+    - "5000:5000"
+web:
+  image: nginx:latest
+  links:
+    - jenkins
+    - elk
+  ports:
+    - "80:80"
+  expose:
+    - 80
