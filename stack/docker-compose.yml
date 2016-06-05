@@ -1,22 +1,34 @@
+rabbitmq:
+  image: dockerfile/rabbitmq
+  ports:
+    - "5672:5672"
+    - "15672:15672"
+
 jenkins:
   image: jenkins:latest
+  links:
+    - rabbitmq
   environment:
     JAVA_OPTS: "-Djava.awt.headless=true"
     JENKINS_OPTS: "--prefix=/jenkins"
   ports:
     - "8080:8080"
     - "50000:50000"
- 
+
 elk:
   image: elk:latest
+  links:
+    - rabbitmq
   ports:
     - "5601:5601"
     - "9200:9200"
     - "5044:5044"
     - "5000:5000"
+
 web:
   image: nginx:latest
   links:
+    - rabbitmq
     - jenkins
     - elk
   ports:

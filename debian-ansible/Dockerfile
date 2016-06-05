@@ -1,4 +1,4 @@
-FROM debian/jessie
+FROM debian:latest
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get -qqy update && \
     apt-get -qqy upgrade && \

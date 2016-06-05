@@ -1,4 +1,4 @@
-FROM debian/jessie-ansible
+FROM debian/jessie:latest
 ADD ansible /srv/example/
 WORKDIR /srv/example
 
