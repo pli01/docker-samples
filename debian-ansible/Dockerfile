@@ -1,5 +1,5 @@
 FROM debian/jessie
-ARG DEBIAN_FRONTEND=noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get -qqy update && \
     apt-get -qqy upgrade && \
     apt-get install -y ansible && \
