@@ -1,5 +1,8 @@
+name ?= debian/jessie
+tag  ?= latest
+
 build:
-	docker build --force-rm -t debian/jessie-ansible .
+	docker build --force-rm -t $(name):$(tag) .
 
 run: build
-	docker-compose run -d --rm --service-ports debian/jessie-ansible
+	docker-compose run -d --rm --service-ports $(name):$(tag)
