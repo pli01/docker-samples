@@ -2,6 +2,4 @@
 #
 # build minimal base image
 #
-mkdir CHROOT=debian
-debootstrap stable $CHROOT http://httpredir.debian.org/debian
-tar -C $CHROOT -c . | docker import - debian/jessie:latest
+/usr/share/docker-engine/contrib/mkimage.sh -t debian/jessie:latest debootstrap jessie
