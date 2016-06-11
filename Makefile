@@ -3,14 +3,20 @@ all:
 build-scratch:
 	cd base-image && bash build.sh
 
-debian-latest:
+build-debian-latest:
 	make -C debian build
-ansible:
+build-ansible:
 	make -C debian-ansible build
-nginx:
+build-nginx:
 	make -C debian-nginx build
 
-build-image: debian-latest ansible nginx
+build-rsyslog:
+	make -C rsyslog build
+
+build-elk-input:
+	make -C elk-input build
+
+build-image: build-debian-latest build-ansible build-nginx build-rsyslog build-elk-input
 
 build-all: build-scratch build-image
 	echo

@@ -1,0 +1,5 @@
+rsyslog:
+  build: .
+  image: rsyslog:latest
+  expose:
+    - "514"
