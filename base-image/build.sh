@@ -2,4 +2,6 @@
 #
 # build minimal base image
 #
-/usr/share/docker-engine/contrib/mkimage.sh -t debian:latest -d . debootstrap --variant=minbase --components=main --include=inetutils-ping,iproute2 jessie http://httpredir.debian.org/debian
+pkg=locales,apt-utils,inetutils-ping,iproute2
+
+/usr/share/docker-engine/contrib/mkimage.sh -t debian-base:latest -d . debootstrap --variant=minbase --components=main --include=$pkg jessie http://httpredir.debian.org/debian
