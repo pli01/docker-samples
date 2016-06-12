@@ -13,7 +13,7 @@ rabbitmq:
     - "15672"
 
 jenkins:
-  image: jenkins:latest
+  image: pli/jenkins:latest
   links:
     - rabbitmq
     - elk
@@ -43,5 +43,6 @@ web:
     - rabbitmq
     - jenkins
     - elk
+    - log
   ports:
     - "80:80"
