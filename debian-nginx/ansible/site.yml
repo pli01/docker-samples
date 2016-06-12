@@ -8,32 +8,60 @@
     - yum: pkg=nginx state=present
       when: ansible_os_family == "RedHat"
 
-    - apt: update_cache=yes name="nginx" state=present
+#    - name: Suppress autostart with policy-rc.d
+#      copy:
+#        content="#!/bin/sh\nexit 101\n"
+#        dest=/usr/sbin/policy-rc.d mode=0755 
+#
+    - name: add apt-key
+      apt_key: url=http://nginx.org/keys/nginx_signing.key state=present
       when: ansible_os_family == "Debian"
 
-    - name: daemon off
-      lineinfile: dest={{nginx_conf_dir}}/nginx.conf line="daemon off;"
+    - name: add nginx repo
+      apt_repository: repo='deb http://nginx.org/packages/debian jessie nginx' state=present update_cache=yes
+      when: ansible_os_family == "Debian"
 
-    - name: Apply index.html from template
-      template: 
-         src: index.j2 
-         dest: /var/www/html/index.html
-         mode: "0644"
+    - name: install nginx
+      apt: update_cache=yes name="nginx" state=present install_recommends=no
+      when: ansible_os_family == "Debian"
 
     - name: copy site
       copy: 
          src: "{{ item }}.conf"
-         dest: "{{nginx_conf_dir}}/sites-available/{{ item }}.conf"
+         dest: "{{nginx_conf_dir}}/conf.d/{{ item }}.conf"
          mode: "0644"
       with_items:
         - "kibana"
 
     - name: Remove links for sites-enabled
-      file: state=absent path={{nginx_conf_dir}}/sites-enabled/{{ item }}
+      file: state=absent path={{nginx_conf_dir}}/conf.d/{{ item }}.conf
       with_items:
         - "default"
 
-    - name: Create links for sites-enabled
-      file: state=link src={{nginx_conf_dir}}/sites-available/{{ item }}.conf dest={{nginx_conf_dir}}/sites-enabled/{{ item }}.conf
-      with_items:
-        - "kibana"
+
+#### for defautl debian nginx
+#    - name: daemon off
+#      lineinfile: dest={{nginx_conf_dir}}/nginx.conf line="daemon off;"
+#
+#    - name: Apply index.html from template
+#      template: 
+#         src: index.j2 
+#         dest: /var/www/html/index.html
+#         mode: "0644"
+#    - name: copy site
+#      copy: 
+#         src: "{{ item }}.conf"
+#         dest: "{{nginx_conf_dir}}/sites-available/{{ item }}.conf"
+#         mode: "0644"
+#      with_items:
+#        - "kibana"
+#
+#    - name: Remove links for sites-enabled
+#      file: state=absent path={{nginx_conf_dir}}/sites-enabled/{{ item }}
+#      with_items:
+#        - "default"
+#
+#    - name: Create links for sites-enabled
+#      file: state=link src={{nginx_conf_dir}}/sites-available/{{ item }}.conf dest={{nginx_conf_dir}}/sites-enabled/{{ item }}.conf
+#      with_items:
+#        - "kibana"
