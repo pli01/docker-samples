@@ -1,18 +1,60 @@
-log:
+version: '2'
+# define network
+networks:
+  default:
+    driver: bridge
+    driver_opts:
+      com.docker.network.enable_ipv6: "false"
+      com.docker.network.enable_ipv4: "true"
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.16.0.0/16
+
+# define services
+services:
+ tinyproxy:
+  image: tinyproxy:latest
+  links:
+    - log
+  expose:
+    - "8888"
+  entrypoint:
+    - /start.sh
+    - 172.17.0.0/16
+    - 172.16.0.0/16
+  networks:
+      default:
+        ipv4_address: 172.16.1.2
+# redirect log from tinyproxy service to log service
+  logging:
+    driver: syslog
+    options:
+      syslog-address: "tcp://172.16.1.1:514"
+      syslog-format: rfc5424
+      tag: "tinyproxy"
+
+# log service listen and forward to elk
+ log:
   image: rsyslog:latest
   links:
     - elk
-  expose:
-    - "514/tcp"
-    - "514/udp"
+  ports:
+    - "514/tcp:514/tcp"
+    - "514/udp:514/udp"
+  networks:
+      default:
+        ipv4_address: 172.16.1.1
 
-rabbitmq:
+# rabbitmq service (optionnal)
+ rabbitmq:
   image: dockerfile/rabbitmq
   expose:
     - "5672"
     - "15672"
 
-jenkins:
+# jenkins service, execute job and send syslog and jobs logs to log service
+ jenkins:
   image: pli/jenkins:latest
   links:
     - rabbitmq
@@ -25,7 +67,8 @@ jenkins:
     - "8080"
     - "50000"
 
-elk:
+# elk service , logstash listen to syslog message and send to elasticsearch, view in kibana
+ elk:
 #  image: elk:latest
   image: pli/elk:latest
   links:
@@ -37,7 +80,8 @@ elk:
     - "5000"
     - "10514/udp"
 
-web:
+# rpx service host virtualhost for / (elk), /jenkins, /rabbitmq
+ web:
   image: nginx:latest
   links:
     - rabbitmq
