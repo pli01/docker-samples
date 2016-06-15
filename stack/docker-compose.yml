@@ -10,7 +10,7 @@ networks:
       driver: default
       config:
       - subnet: 172.16.0.0/16
-
+#
 # define services
 services:
  tinyproxy:
@@ -30,8 +30,9 @@ services:
   logging:
     driver: syslog
     options:
-      syslog-address: "tcp://172.16.1.1:514"
-      syslog-format: rfc5424
+      syslog-address: "udp://172.16.1.1:514"
+#      syslog-format: rfc3164
+      syslog-tag: "{{.ImageName}}/{{.Name}}/{{.ID}}"
 
 # log service listen and forward to elk
  log:

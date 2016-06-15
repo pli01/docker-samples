@@ -1,11 +1,12 @@
 # docker-samples
 
-- stack directory contains a docker-compose to build a full functionnal jenkins/elk/rabbit/rsyslog
-  - jenkins + with nginx reverse proxy in front of them
+- stack directory contains a docker-compose to build a full functionnal rpx/jenkins/elk/rabbit/rsyslog/tinyproxy
   - container web:  nginx reverse proxy wich expose 80 port and redirect /jenkins to jenkins container and /kibana to container kibana port
-  - container jenkins
   - container rsyslog (transform to json and send to logstash (syslog input) in elk
-  - container elk
+  - container jenkins (https://github.com/jenkinsci/docker)
+  - container elk (https://github.com/pli01/elk-docker.git)
+  - container rabbitmq (https://github.com/pli01/rabbitmq.git)
+  - container tinyproxy (https://github.com/francisbesset/docker-tinyproxy.git)
 
 This stack depends on the following
 
