@@ -32,7 +32,6 @@ services:
     options:
       syslog-address: "tcp://172.16.1.1:514"
       syslog-format: rfc5424
-      tag: "tinyproxy"
 
 # log service listen and forward to elk
  log:
