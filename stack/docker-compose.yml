@@ -9,28 +9,28 @@ networks:
     ipam:
       driver: default
       config:
-      - subnet: 172.16.0.0/16
+      - subnet: 172.18.0.0/16
 #
 # define services
 services:
  tinyproxy:
-  image: tinyproxy:latest
+  image: pli/tinyproxy:latest
   links:
     - log
   expose:
     - "8888"
   entrypoint:
     - /start.sh
-    - 172.17.0.0/16
-    - 172.16.0.0/16
+#    - 172.17.0.0/16
+    - 172.18.0.0/24
   networks:
       default:
-        ipv4_address: 172.16.1.2
+        ipv4_address: 172.18.2.20
 # redirect log from tinyproxy service to log service
   logging:
     driver: syslog
     options:
-      syslog-address: "udp://172.16.1.1:514"
+      syslog-address: "udp://172.18.2.10:514"
 #      syslog-format: rfc3164
       syslog-tag: "{{.ImageName}}/{{.Name}}/{{.ID}}"
 
@@ -44,7 +44,7 @@ services:
     - "514/udp:514/udp"
   networks:
       default:
-        ipv4_address: 172.16.1.1
+        ipv4_address: 172.18.2.10
 
 # rabbitmq service (optionnal)
  rabbitmq:
