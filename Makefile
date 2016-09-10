@@ -1,7 +1,7 @@
 all:
 	echo
 build-scratch:
-	cd base-image && bash build.sh
+	( cd base-image && sudo -E bash -x build-debian.sh )
 
 build-debian-latest:
 	make -C debian build

@@ -1,0 +1,98 @@
+version: '2'
+# define network
+networks:
+  default:
+    driver: bridge
+    driver_opts:
+      com.docker.network.enable_ipv6: "false"
+      com.docker.network.enable_ipv4: "true"
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.18.0.0/16
+#
+# define services
+services:
+# tinyproxy:
+#  image: pli/tinyproxy:latest
+#  links:
+#    - log
+#  expose:
+#    - "8888"
+#  entrypoint:
+#    - /start.sh
+##    - 172.17.0.0/16
+#    - 172.18.0.0/24
+#  networks:
+#      default:
+#        ipv4_address: 172.18.2.20
+## redirect log from tinyproxy service to log service
+#  logging:
+#    driver: syslog
+#    options:
+#      syslog-address: "udp://172.18.2.10:514"
+##      syslog-format: rfc3164
+#      syslog-tag: "{{.ImageName}}/{{.Name}}/{{.ID}}"
+#
+# log service listen and forward to elk
+# log:
+#  image: rsyslog:latest
+##  links:
+##    - elk
+#  ports:
+#    - "514/tcp:514/tcp"
+#    - "514/udp:514/udp"
+#  networks:
+#      default:
+#        ipv4_address: 172.18.2.10
+#
+# rabbitmq service (optionnal)
+# rabbitmq:
+#  image: dockerfile/rabbitmq
+#  expose:
+#    - "5672"
+#    - "15672"
+#
+# jenkins service, execute job and send syslog and jobs logs to log service
+ jenkins:
+#  image: pli/jenkins:latest
+  image: pli/jenkins:2.7.3
+#  links:
+#    - rabbitmq
+#    - elk
+#    - log
+  environment:
+    JAVA_OPTS: "-Djava.awt.headless=true"
+    JENKINS_OPTS: "--prefix=/jenkins"
+  expose:
+    - "8080"
+    - "50000"
+
+## elk service , logstash listen to syslog message and send to elasticsearch, view in kibana
+# elk:
+##  image: elk:latest
+#  image: pli/elk:latest
+#  links:
+#    - rabbitmq
+#  expose:
+#    - "5601"
+#    - "9200"
+#    - "5044"
+#    - "5000"
+#    - "10514/udp"
+#
+# rpx service host virtualhost for / (elk), /jenkins, /rabbitmq
+ web:
+  image: nginx:latest
+  extra_hosts:
+   - "rabbitmq:192.1.1.1"
+   - "log:192.1.1.2"
+   - "elk:192.1.1.3"
+
+  links:
+#    - rabbitmq
+    - jenkins
+#    - elk
+#    - log
+  ports:
+    - "80:80"
