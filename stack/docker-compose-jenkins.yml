@@ -55,8 +55,7 @@ services:
 #
 # jenkins service, execute job and send syslog and jobs logs to log service
  jenkins:
-#  image: pli/jenkins:latest
-  image: pli/jenkins:2.7.3
+  image: pli/jenkins2:latest
 #  links:
 #    - rabbitmq
 #    - elk

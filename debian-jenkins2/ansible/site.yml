@@ -1,0 +1,5 @@
+- hosts: localhost
+  roles:
+    - packages
+    - ansible-jenkins2
+

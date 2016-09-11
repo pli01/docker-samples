@@ -11,4 +11,4 @@ stop:
 down:
 	docker-compose -f $(DOCKER_COMPOSE_FILE) down
 rm: stop
-	docker-compose -f $(DOCKER_COMPOSE_FILE) rm  -f
+	docker-compose -f $(DOCKER_COMPOSE_FILE) rm -f -v
