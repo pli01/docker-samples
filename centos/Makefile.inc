@@ -1,0 +1,2 @@
+name ?= centos
+tag  ?= latest

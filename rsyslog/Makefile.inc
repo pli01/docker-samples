@@ -1,0 +1,2 @@
+name ?= rsyslog
+tag  ?= latest

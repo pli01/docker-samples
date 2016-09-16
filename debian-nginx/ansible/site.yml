@@ -39,7 +39,7 @@
         - "default"
 
 
-#### for defautl debian nginx
+#### for defautl debian nginx container
 #    - name: daemon off
 #      lineinfile: dest={{nginx_conf_dir}}/nginx.conf line="daemon off;"
 #

@@ -1,0 +1,2 @@
+name ?= debian
+tag  ?= latest
