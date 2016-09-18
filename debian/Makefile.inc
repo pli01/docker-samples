@@ -1,2 +1,1 @@
 name ?= debian
-tag  ?= latest

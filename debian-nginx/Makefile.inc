@@ -1,2 +1,1 @@
 name ?= nginx
-tag  ?= latest

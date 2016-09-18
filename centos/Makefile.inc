@@ -1,2 +1,1 @@
 name ?= centos
-tag  ?= latest
