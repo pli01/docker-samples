@@ -22,7 +22,7 @@ SUBDIRS = $(DISTRIB) $(DISTRIB)-ansible2 $(DISTRIB)-nginx java $(DISTRIB)-jenkin
 # build-rsyslog build-elk-input
 
 all:
-	echo make DISTRIB= VERSION=
+	echo make build DISTRIB= [VERSION=]
 
 build-$(DISTRIB)-latest: build
 	@echo
