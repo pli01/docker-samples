@@ -4,16 +4,11 @@ VERSION ?=
 # include vars per distrib
 -include $(DISTRIB)/Makefile.inc
 
+tag     ?= latest
 ifdef VERSION
 newname  :=  $(name)/$(VERSION)
-tag      ?= $(VERSION)
+#tag      := $(VERSION)
 endif
-
-ifdef newname
-#name = $(newname)
-endif
-
-tag     ?= latest
 
 build_args += $(shell [ -z "${http_proxy}" ] || echo " --build-arg http_proxy=${http_proxy} ")
 build_args += $(shell [ -z "${https_proxy}" ] || echo " --build-arg https_proxy=${http_proxy} ")
@@ -24,18 +19,15 @@ SUBDIRS = $(DISTRIB) $(DISTRIB)-ansible2 $(DISTRIB)-nginx java $(DISTRIB)-jenkin
 all:
 	echo make build DISTRIB= [VERSION=]
 
-build-$(DISTRIB)-latest: build
-	@echo
-
 .PHONY: subdirs $(SUBDIRS)
 
 subdirs: $(SUBDIRS)
 
 $(SUBDIRS):
-	@$(MAKE) build DISTRIB=$@
+	@$(MAKE) build DISTRIB=$@ VERSION=$(VERSION)
 
 build-image: subdirs
-#	echo
+	@echo "# $@"
 
 build: $(DISTRIB)/Dockerfile
 	( cd $(DISTRIB) && docker build $(build_args) --force-rm -t $(name):$(tag) -f Dockerfile . )
@@ -43,6 +35,9 @@ build: $(DISTRIB)/Dockerfile
 build-scratch:
 	@$(MAKE) -C base-image build DISTRIB=$(DISTRIB) VERSION=$(VERSION)
 
-
 build-all: build-scratch build-image
-	echo
+	echo "# $@"
+
+clean-image:
+	-docker ps -f status=exited -a -q | xargs docker rm || true
+	-docker images -f dangling=true -a -q| docker rmi || true
