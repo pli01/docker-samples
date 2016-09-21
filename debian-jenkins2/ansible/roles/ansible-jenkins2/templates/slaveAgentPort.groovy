@@ -7,4 +7,5 @@ import hudson.model.*;
 
 // This will use a setter, which will set the value (to a random port) 
 // and also initialize the slave agent.
-Jenkins.instance.slaveAgentPort=0
+Jenkins.instance.setSlaveAgentPort(0)
+Jenkins.instance.save()
