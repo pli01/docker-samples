@@ -15,6 +15,21 @@
     mode: 0755
   become: true
 
+- name: Jenkins Script - Install plugin
+  template:
+    src: "{{ item.src }}"
+    dest: "/var/lib/jenkins/init.groovy.d/{{ item.dest }}"
+    owner: jenkins
+    group: jenkins
+    mode: 0744
+  with_items:
+    - { src: "updatePlugins.groovy",  dest: "01updatePlugins.groovy" }
+    - { src: "installPlugins.groovy", dest: "02installPlugins.groovy" }
+    - { src: "globalConfig.groovy",   dest: "03globalConfig.groovy" }
+  become: true
+  notify:
+    - "Restart Service 'jenkins'"
+
 - name: Jenkins Script - Configure Slave Agent Port
   template:
     src: slaveAgentPort.groovy
@@ -63,49 +78,38 @@
   notify:
     - "Restart Service 'jenkins'"
 
-- name: Jenkins Script - Install plugin
-  template:
-    src: installplugins.groovy
-    dest: /var/lib/jenkins/init.groovy.d/installplugins.groovy
-    owner: jenkins
-    group: jenkins
-    mode: 0744
-  become: true
-  notify:
-    - "Restart Service 'jenkins'"
-
 
 # Fire any pending restart handlers now, as all of the above scripts will not 
 # be run until Jenkins restarts, and are required in order for the CLI-using
 # tasks below to work.
 - meta: flush_handlers
 
-# At this point (once the service is restarted), the CLI itself should be usable
-# by the 'jenkins' system user (and its SSH keys).
-
-- name: Create Jenkins CLI Directory
-  file:
-    path: /opt/jenkins
-    state: directory
-    owner: jenkins
-    group: jenkins
-    mode: 0755
-  become: true
-
-# The CLI comes "baked in" to the Jenkins WAR. Easiest way to extract it is 
-# just to download it.
-- name: Get Jenkins CLI
-  get_url:
-    url: "http://localhost:{{ jenkins_port }}{{ jenkins_context_path | default('') }}/jnlpJars/jenkins-cli.jar"
-    dest: /opt/jenkins/jenkins-cli.jar
-    owner: jenkins
-    group: jenkins
-    mode: 0444
-  become: true
-
-- name: Verify CLI
-  shell: "java -jar /opt/jenkins/jenkins-cli.jar -s http://localhost:{{ jenkins_port }}{{ jenkins_context_path | default('') }} who-am-i"
-  register: cli_whoami
-  become: true
-  become_user: jenkins
-  changed_when: false
+### At this point (once the service is restarted), the CLI itself should be usable
+### by the 'jenkins' system user (and its SSH keys).
+##
+##- name: Create Jenkins CLI Directory
+##  file:
+##    path: /opt/jenkins
+##    state: directory
+##    owner: jenkins
+##    group: jenkins
+##    mode: 0755
+##  become: true
+##
+### The CLI comes "baked in" to the Jenkins WAR. Easiest way to extract it is 
+### just to download it.
+##- name: Get Jenkins CLI
+##  get_url:
+##    url: "http://localhost:{{ jenkins_port }}{{ jenkins_context_path | default('') }}/jnlpJars/jenkins-cli.jar"
+##    dest: /opt/jenkins/jenkins-cli.jar
+##    owner: jenkins
+##    group: jenkins
+##    mode: 0444
+##  become: true
+##
+##- name: Verify CLI
+##  shell: "java -jar /opt/jenkins/jenkins-cli.jar -s http://localhost:{{ jenkins_port }}{{ jenkins_context_path | default('') }} who-am-i"
+##  register: cli_whoami
+##  become: true
+##  become_user: jenkins
+##  changed_when: false
