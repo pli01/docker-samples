@@ -23,6 +23,7 @@
     group: jenkins
     mode: 0744
   with_items:
+    - { src: "proxy.groovy",  dest: "00proxy.groovy" }
     - { src: "updatePlugins.groovy",  dest: "01updatePlugins.groovy" }
     - { src: "installPlugins.groovy", dest: "02installPlugins.groovy" }
     - { src: "globalConfig.groovy",   dest: "03globalConfig.groovy" }

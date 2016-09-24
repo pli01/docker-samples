@@ -42,3 +42,5 @@ jenkins_plugins_recommended:
 # The additional plugins that users of this role would like to be installed 
 # (must be overridden).
 jenkins_plugins_extra: []
+jenkins_proxy_host: "localhost"
+jenkins_proxy_port: "8888"
