@@ -23,24 +23,54 @@ jenkins_context_path: '/jenkins'
 jenkins_admin_users:
   - 'hudson.security.HudsonPrivateSecurityRealm:admin'
 
+# none, jenkins, ldap
+jenkins_security_realm: 'jenkins'
+#jenkins_security_realm: 'ldap'
+#jenkins_authorization_strategy: unsecured, full, role,
+#jenkins_authorization_strategy: 'full'
+jenkins_authorization_strategy: 'unsecured'
+jenkins:
+  email:
+
 # The plugins that the Jenkins 2.0 setup wizard installs by default. Currently, 
 # the best place to find this list seems to be in the source, here:
 # ttps://github.com/jenkinsci/jenkins/blob/master/war/src/main/js/api/plugins.js
 jenkins_plugins_recommended: 
+  - role-strategy
+  - email-ext
+  - audit-trail
+  - build-pipeline-plugin
+  - copy-project-link
+  - delivery-pipeline-plugin
+  - git
+  - git-client
+  - greenballs
+  - jobConfigHistory
+  - jobcopy-builder
+  - jquery
+  - mapdb-api
+  - multiple-scms
+  - packer
+  - parameterized-trigger
+  - scm-api
   - build-timeout
   - credentials-binding
-  - git
   - gradle
   - ldap
   - mailer
   - matrix-auth
   - pam-auth
   - ssh-slaves
+  - skip-certificate-check
   - timestamper
   - ws-cleanup
+  - urltrigger
+  - ansicolor
+  - ansible
 
 # The additional plugins that users of this role would like to be installed 
 # (must be overridden).
 jenkins_plugins_extra: []
+
 jenkins_proxy_host: "localhost"
 jenkins_proxy_port: "8888"

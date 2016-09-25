@@ -27,20 +27,83 @@
     - { src: "updatePlugins.groovy",  dest: "01updatePlugins.groovy" }
     - { src: "installPlugins.groovy", dest: "02installPlugins.groovy" }
     - { src: "globalConfig.groovy",   dest: "03globalConfig.groovy" }
+    - { src: "slaveAgentPort.groovy",   dest: "03slaveAgentPort.groovy" }
+    - { src: "setEMailSettings.groovy",     dest: "03setEMailSettings.groovy" }
   become: true
   notify:
     - "Restart Service 'jenkins'"
 
-- name: Jenkins Script - Configure Slave Agent Port
+- name: Jenkins Script - Set Security Realm to Jenkins DB
   template:
-    src: slaveAgentPort.groovy
-    dest: /var/lib/jenkins/init.groovy.d/slaveAgentPort.groovy
+    src: "{{ item.src }}"
+    dest: "/var/lib/jenkins/init.groovy.d/{{ item.dest }}"
     owner: jenkins
     group: jenkins
     mode: 0744
+  with_items:
+    - { src: "enableJenkinsSecurity.groovy",  dest: "03enableSecurityRealm.groovy" }
   become: true
   notify:
     - "Restart Service 'jenkins'"
+  when: jenkins_security_realm is defined and jenkins_security_realm == 'jenkins'
+
+- name: Jenkins Script - Set Security Realm to LDAP
+  template:
+    src: "{{ item.src }}"
+    dest: "/var/lib/jenkins/init.groovy.d/{{ item.dest }}"
+    owner: jenkins
+    group: jenkins
+    mode: 0744
+  with_items:
+    - { src: "enableLDAPSecurity.groovy",  dest: "03enableSecurityRealm.groovy" }
+  become: true
+  notify:
+    - "Restart Service 'jenkins'"
+  when: jenkins_security_realm is defined and jenkins_security_realm == 'ldap'
+
+- name: Jenkins Script - Set Authorization Strategy to Role Based
+  template:
+    src: "{{ item.src }}"
+    dest: "/var/lib/jenkins/init.groovy.d/{{ item.dest }}"
+    owner: jenkins
+    group: jenkins
+    mode: 0744
+  with_items:
+    - { src: "enableRoleBasedAuthorizationStrategy.groovy",  dest: "04enableAuthorizationStrategy.groovy" }
+  become: true
+  notify:
+    - "Restart Service 'jenkins'"
+  when: jenkins_authorization_strategy is defined and jenkins_authorization_strategy == 'role'
+
+
+- name: Jenkins Script - Set Authorization Strategy to Full Control User Logged In
+  template:
+    src: "{{ item.src }}"
+    dest: "/var/lib/jenkins/init.groovy.d/{{ item.dest }}"
+    owner: jenkins
+    group: jenkins
+    mode: 0744
+  with_items:
+    - { src: "enableFullControlOnceLoggedInAuthorizationStrategy.groovy",  dest: "04enableAuthorizationStrategy.groovy" }
+  become: true
+  notify:
+    - "Restart Service 'jenkins'"
+  when: jenkins_authorization_strategy is defined and jenkins_authorization_strategy == 'full'
+
+- name: Jenkins Script - Set Authorization Strategy to Unsecured
+  template:
+    src: "{{ item.src }}"
+    dest: "/var/lib/jenkins/init.groovy.d/{{ item.dest }}"
+    owner: jenkins
+    group: jenkins
+    mode: 0744
+  with_items:
+    - { src: "enableUnsecuredAuthorizationStrategy.groovy",  dest: "04enableAuthorizationStrategy.groovy" }
+  become: true
+  notify:
+    - "Restart Service 'jenkins'"
+  when: jenkins_authorization_strategy is defined and jenkins_authorization_strategy == 'unsecured'
+
 
 - name: Generate SSH Keys for jenkins Service Account
   user:
