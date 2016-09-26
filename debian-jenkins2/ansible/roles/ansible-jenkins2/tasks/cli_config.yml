@@ -23,12 +23,12 @@
     group: jenkins
     mode: 0744
   with_items:
-    - { src: "proxy.groovy",  dest: "00proxy.groovy" }
-    - { src: "updatePlugins.groovy",  dest: "01updatePlugins.groovy" }
-    - { src: "installPlugins.groovy", dest: "02installPlugins.groovy" }
-    - { src: "globalConfig.groovy",   dest: "03globalConfig.groovy" }
-    - { src: "slaveAgentPort.groovy",   dest: "03slaveAgentPort.groovy" }
-    - { src: "setEMailSettings.groovy",     dest: "03setEMailSettings.groovy" }
+    - { src: "proxy.groovy",            dest: "00proxy.groovy" }
+    - { src: "updatePlugins.groovy",    dest: "10updatePlugins.groovy" }
+    - { src: "installPlugins.groovy",   dest: "12installPlugins.groovy" }
+    - { src: "globalConfig.groovy",     dest: "30globalConfig.groovy" }
+    - { src: "slaveAgentPort.groovy",   dest: "30slaveAgentPort.groovy" }
+    - { src: "setEMailSettings.groovy", dest: "30setEMailSettings.groovy" }
   become: true
   notify:
     - "Restart Service 'jenkins'"
@@ -41,7 +41,7 @@
     group: jenkins
     mode: 0744
   with_items:
-    - { src: "enableJenkinsSecurity.groovy",  dest: "03enableSecurityRealm.groovy" }
+    - { src: "enableJenkinsSecurity.groovy",  dest: "20enableSecurityRealm.groovy" }
   become: true
   notify:
     - "Restart Service 'jenkins'"
@@ -55,11 +55,25 @@
     group: jenkins
     mode: 0744
   with_items:
-    - { src: "enableLDAPSecurity.groovy",  dest: "03enableSecurityRealm.groovy" }
+    - { src: "enableLDAPSecurity.groovy",  dest: "20enableSecurityRealm.groovy" }
   become: true
   notify:
     - "Restart Service 'jenkins'"
   when: jenkins_security_realm is defined and jenkins_security_realm == 'ldap'
+
+- name: Jenkins Script - Set Security Realm to PAM
+  template:
+    src: "{{ item.src }}"
+    dest: "/var/lib/jenkins/init.groovy.d/{{ item.dest }}"
+    owner: jenkins
+    group: jenkins
+    mode: 0744
+  with_items:
+    - { src: "enablePAMSecurity.groovy",  dest: "20enableSecurityRealm.groovy" }
+  become: true
+  notify:
+    - "Restart Service 'jenkins'"
+  when: jenkins_security_realm is defined and jenkins_security_realm == 'pam'
 
 - name: Jenkins Script - Set Authorization Strategy to Role Based
   template:
@@ -69,7 +83,7 @@
     group: jenkins
     mode: 0744
   with_items:
-    - { src: "enableRoleBasedAuthorizationStrategy.groovy",  dest: "04enableAuthorizationStrategy.groovy" }
+    - { src: "enableRoleBasedAuthorizationStrategy.groovy",  dest: "21enableAuthorizationStrategy.groovy" }
   become: true
   notify:
     - "Restart Service 'jenkins'"
@@ -84,7 +98,7 @@
     group: jenkins
     mode: 0744
   with_items:
-    - { src: "enableFullControlOnceLoggedInAuthorizationStrategy.groovy",  dest: "04enableAuthorizationStrategy.groovy" }
+    - { src: "enableFullControlOnceLoggedInAuthorizationStrategy.groovy",  dest: "21enableAuthorizationStrategy.groovy" }
   become: true
   notify:
     - "Restart Service 'jenkins'"
@@ -98,7 +112,7 @@
     group: jenkins
     mode: 0744
   with_items:
-    - { src: "enableUnsecuredAuthorizationStrategy.groovy",  dest: "04enableAuthorizationStrategy.groovy" }
+    - { src: "enableUnsecuredAuthorizationStrategy.groovy",  dest: "21enableAuthorizationStrategy.groovy" }
   become: true
   notify:
     - "Restart Service 'jenkins'"
@@ -147,33 +161,3 @@
 # be run until Jenkins restarts, and are required in order for the CLI-using
 # tasks below to work.
 - meta: flush_handlers
-
-### At this point (once the service is restarted), the CLI itself should be usable
-### by the 'jenkins' system user (and its SSH keys).
-##
-##- name: Create Jenkins CLI Directory
-##  file:
-##    path: /opt/jenkins
-##    state: directory
-##    owner: jenkins
-##    group: jenkins
-##    mode: 0755
-##  become: true
-##
-### The CLI comes "baked in" to the Jenkins WAR. Easiest way to extract it is 
-### just to download it.
-##- name: Get Jenkins CLI
-##  get_url:
-##    url: "http://localhost:{{ jenkins_port }}{{ jenkins_context_path | default('') }}/jnlpJars/jenkins-cli.jar"
-##    dest: /opt/jenkins/jenkins-cli.jar
-##    owner: jenkins
-##    group: jenkins
-##    mode: 0444
-##  become: true
-##
-##- name: Verify CLI
-##  shell: "java -jar /opt/jenkins/jenkins-cli.jar -s http://localhost:{{ jenkins_port }}{{ jenkins_context_path | default('') }} who-am-i"
-##  register: cli_whoami
-##  become: true
-##  become_user: jenkins
-##  changed_when: false

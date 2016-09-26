@@ -23,9 +23,10 @@ jenkins_context_path: '/jenkins'
 jenkins_admin_users:
   - 'hudson.security.HudsonPrivateSecurityRealm:admin'
 
-# none, jenkins, ldap
-jenkins_security_realm: 'jenkins'
+# jenkins, ldap, pam
+#jenkins_security_realm: 'jenkins'
 #jenkins_security_realm: 'ldap'
+#jenkins_security_realm: 'pam'
 #jenkins_authorization_strategy: unsecured, full, role,
 #jenkins_authorization_strategy: 'full'
 jenkins_authorization_strategy: 'unsecured'
