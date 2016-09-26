@@ -9,7 +9,7 @@ AuthorizationStrategy strategy = Jenkins.instance.getAuthorizationStrategy()
 
 logger = Logger.getLogger("RoleBasedAuthorizationStrategy Updater")
 
-if(strategy ==null || !strategy instanceof RoleBasedAuthorizationStrategy){
+if(strategy ==null || !(strategy instanceof RoleBasedAuthorizationStrategy) ){
  logger.info("We shoud build a RoleBasedAuthorizationStrategy!")
  strategy = new RoleBasedAuthorizationStrategy()
  strategy.getRoleMaps().put("globalRoles", new RoleMap())

@@ -3,6 +3,9 @@
 # and can be overridden by the active play.
 # (Other files in this directory must be included via an `include_vars` task.)
 
+jenkins_users_api_token:
+  - builder
+  - deployer
 # Jenkins doesn't (and shouldn't) run as root, so this must be over 1024.
 jenkins_port: 8080
 
@@ -26,10 +29,10 @@ jenkins_admin_users:
 # jenkins, ldap, pam
 #jenkins_security_realm: 'jenkins'
 #jenkins_security_realm: 'ldap'
-#jenkins_security_realm: 'pam'
+jenkins_security_realm: 'pam'
 #jenkins_authorization_strategy: unsecured, full, role,
-#jenkins_authorization_strategy: 'full'
-jenkins_authorization_strategy: 'unsecured'
+jenkins_authorization_strategy: 'full'
+#jenkins_authorization_strategy: 'unsecured'
 jenkins:
   email:
 

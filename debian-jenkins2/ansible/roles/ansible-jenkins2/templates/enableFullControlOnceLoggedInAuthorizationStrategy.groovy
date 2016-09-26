@@ -9,7 +9,7 @@ AuthorizationStrategy strategy = Jenkins.instance.getAuthorizationStrategy()
 
 logger = Logger.getLogger("FullControlOnceLoggedInAuthorizationStrategy Updater")
 
-if(strategy ==null || !strategy instanceof FullControlOnceLoggedInAuthorizationStrategy){
+if(strategy ==null || ! (strategy instanceof FullControlOnceLoggedInAuthorizationStrategy) ){
  logger.info("FullControlOnceLoggedInAuthorizationStrategy set!")
  strategy = new FullControlOnceLoggedInAuthorizationStrategy()
  strategy.setAllowAnonymousRead(false)

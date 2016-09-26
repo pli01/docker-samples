@@ -1,10 +1,15 @@
 ---
+- name: Include OS-specific variables
+  include_vars: "{{ ansible_os_family }}.yml"
 
 # Install all OS packages (including Jenkins itself).
 - include: "packages_{{ ansible_os_family }}.yml"
 
 # Configure the service's launch options.
 - include: "service_config_{{ ansible_os_family }}.yml"
+
+# Prepare sudo/group
+- include: "prepare.yml"
 
 # Enable the Jenkins CLI.
 - include: "cli_config.yml"
@@ -24,8 +29,12 @@
   # without getting a 403 and redirect is the login page.
   uri:
     url: "http://localhost:{{ jenkins_port }}{{ jenkins_context_path | default('') }}/login"
+    status_code: 200
     return_content: true
+  until: jenkins_ui.status == 200
   register: jenkins_ui
+  retries: 60
+  delay: 1
 
 - name: Verify Jenkins Web UI Content
   action: fail

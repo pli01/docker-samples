@@ -7,9 +7,9 @@ import java.util.logging.Logger
 
 AuthorizationStrategy strategy = Jenkins.instance.getAuthorizationStrategy()
 
-logger = Logger.getLogger("FullControlOnceLoggedInAuthorizationStrategy Updater")
+logger = Logger.getLogger("AuthorizationStrategy.Unsecured Updater")
 
-if(strategy ==null || !strategy instanceof AuthorizationStrategy.Unsecured){
+if(strategy ==null || !(strategy instanceof AuthorizationStrategy.Unsecured) ){
  logger.info("Unsecured AuthorizationStrategy set!")
  strategy = new AuthorizationStrategy.Unsecured()
  Jenkins.instance.setAuthorizationStrategy(strategy)

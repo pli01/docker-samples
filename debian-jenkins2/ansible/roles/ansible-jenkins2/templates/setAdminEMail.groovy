@@ -7,6 +7,8 @@ def jenkinsLocationConfiguration = JenkinsLocationConfiguration.get()
 
 {% if jenkins.email.default_email_suffix is defined and jenkins.email.default_email_suffix %}
 jenkinsLocationConfiguration.setAdminAddress("{{ jenkins.email.default_email_suffix }}")
+{% else %}
+jenkinsLocationConfiguration.setAdminAddress("noreply@nowhere")
 {% endif %}
 
 {% if jenkins_public_url is defined and jenkins_public_url %}

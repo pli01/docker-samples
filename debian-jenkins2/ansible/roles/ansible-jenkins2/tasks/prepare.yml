@@ -1,0 +1,12 @@
+---
+- name: Add jenkins user to sudoers
+  lineinfile: dest=/etc/sudoers regexp="^{{ jenkins_user_id }} ALL" line="{{ jenkins_user_id }} ALL=(ALL) NOPASSWD:ALL" state=present
+
+- name: Adding existing user '{{ jenkins_user_id }}' to group shadow (PAM Security Realm)
+  user: name='{{ jenkins_user_id }}'
+        groups=shadow
+        append=yes
+
+- name: add several users
+  user: name={{ item }} state=present createhome=no shell=/bin/true
+  with_items: "{{ jenkins_users_api_token }}"
