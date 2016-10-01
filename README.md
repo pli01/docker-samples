@@ -16,3 +16,9 @@ This stack depends on the following
 - elk-input: build an elk with syslog input depends on elk container
 - rsyslog: listen to 514 port and transform in json format and send to elk
 
+Prereq to build:
+- docker host installed and configured
+- make package
+- for base-image debian: debootstrap
+- for base-image centos: rinse
+# apt-get install docker-engine make debootstrap rinse

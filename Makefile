@@ -39,5 +39,5 @@ build-all: build-scratch build-image
 	echo "# $@"
 
 clean-image:
-	-docker ps -f status=exited -a -q | xargs docker rm || true
-	-docker images -f dangling=true -a -q| docker rmi || true
+	-docker ps -f status=exited -a -q | xargs docker rm -v || true
+	-docker images -f dangling=true -a -q| xargs docker rmi || true
