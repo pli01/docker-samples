@@ -17,6 +17,10 @@
 
 - job-template:
     name: 'build-{name}-base-{distrib}'
+    properties:
+      - delivery-pipeline:
+          stage: Scratch
+          task: base-image {distrib}
     scm:
       - docker-samples
     builders:
@@ -28,6 +32,10 @@
 
 - job-template:
     name: 'build-{name}-{distrib}'
+    properties:
+      - delivery-pipeline:
+          stage: Base
+          task: minimal image {distrib}
     scm:
       - docker-samples
     builders:
@@ -40,6 +48,10 @@
 - job-template:
     name: 'build-{name}-{target}'
     previous: ''
+    properties:
+      - delivery-pipeline:
+          stage: Final
+          task: build-final {target}
     scm:
       - docker-samples
     builders:
