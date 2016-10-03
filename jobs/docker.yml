@@ -1,0 +1,84 @@
+- project:
+    name: docker-image
+    distrib:
+      - debian
+    target:
+      - debian-ansible2:
+          previous: 'debian'
+      - java:
+          previous: 'debian-ansible2'
+      - debian-jenkins2:
+          previous: 'java'
+
+    jobs:
+      - build-{name}-base-{distrib}
+      - build-{name}-{distrib}
+      - build-{name}-{target}
+
+- job-template:
+    name: 'build-{name}-base-{distrib}'
+    scm:
+      - docker-samples
+    builders:
+      - make-build-scratch:
+          distrib: "{distrib}"
+    publishers:
+      - trigger:
+          project: 'build-{name}-{distrib}'
+
+- job-template:
+    name: 'build-{name}-{distrib}'
+    scm:
+      - docker-samples
+    builders:
+      - make-build:
+          distrib: "{distrib}"
+    publishers:
+      - trigger:
+          project: 'build-{name}-{target}'
+
+- job-template:
+    name: 'build-{name}-{target}'
+    previous: ''
+    scm:
+      - docker-samples
+    builders:
+      - make-build-target:
+          target: "{target}"
+    triggers:
+      - reverse:
+          jobs: 'build-{name}-{previous}'
+          result: 'success'
+
+- scm:
+    name: docker-samples
+    scm:
+      - git:
+         url: https://github.com/pli01/docker-samples.git
+         branches:
+          - origin/master
+
+- builder:
+    name: make-build
+    builders:
+      - shell: |
+          #!/bin/bash -xe
+          echo Builder
+          ( make build DISTRIB="{distrib}" )
+
+- builder:
+    name: make-build-scratch
+    builders:
+      - shell: |
+          #!/bin/bash -xe
+          echo Builder
+          ( make build-scratch DISTRIB="{distrib}" )
+
+- builder:
+    name: make-build-target
+    builders:
+      - shell: |
+          #!/bin/bash -xe
+          echo Builder
+          ( make build DISTRIB="{target}" )
+
