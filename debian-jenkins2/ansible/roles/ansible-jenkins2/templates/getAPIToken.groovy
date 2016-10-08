@@ -13,6 +13,6 @@ ApiTokenProperty t = u.getProperty(ApiTokenProperty.class)
 
 def token = t.getApiToken()
 
-def file2 = new File('/var/lib/jenkins/jenkins_job_builder_' + it + '.txt')
-file2 << "${token}"
+def file = new File('/var/lib/jenkins/jenkins_job_builder_' + it + '.txt')
+file.write("${token}")
 }
