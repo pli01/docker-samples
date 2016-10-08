@@ -71,6 +71,7 @@ jenkins_plugins_recommended:
   - urltrigger
   - ansicolor
   - ansible
+  - log-parser
 
 # The additional plugins that users of this role would like to be installed 
 # (must be overridden).

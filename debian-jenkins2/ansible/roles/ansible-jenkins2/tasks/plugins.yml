@@ -9,13 +9,18 @@
 # "Should This Plugin Be Updated?" logic is taken from here:
 # https://github.com/ICTO/ansible-jenkins/blob/development/tasks/plugins.yml
 
-- name: Get Plugins
-  get_url: url="http://updates.jenkins-ci.org/latest/{{ item }}.hpi" dest=/var/lib/jenkins/plugins/
-  become: true
-  become_user: jenkins
+- name: List installed Plugins
+  stat: path=/var/lib/jenkins/plugins/{{ item }}.jpi
   with_items:
     - "{{ jenkins_plugins_recommended }}"
     - "{{ jenkins_plugins_extra }}"
+  register: stats
+- name: Get Plugins
+  get_url: url="http://updates.jenkins-ci.org/latest/{{ item.item }}.hpi" dest=/var/lib/jenkins/plugins/{{ item.item }}.jpi
+  become: true
+  become_user: jenkins
+  with_items: stats.results
+  when: item.stat | default(false) and not item.stat.exists
   notify:
     - "Restart Service 'jenkins'"
 #
