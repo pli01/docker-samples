@@ -19,7 +19,7 @@
   get_url: url="http://updates.jenkins-ci.org/latest/{{ item.item }}.hpi" dest=/var/lib/jenkins/plugins/{{ item.item }}.jpi
   become: true
   become_user: jenkins
-  with_items: stats.results
+  with_items: '{{ stats.results }}'
   when: item.stat | default(false) and not item.stat.exists
   notify:
     - "Restart Service 'jenkins'"
