@@ -28,6 +28,7 @@
     - { src: "installPlugins.groovy",   dest: "12installPlugins.groovy" }
     - { src: "globalConfig.groovy",     dest: "30globalConfig.groovy" }
     - { src: "slaveAgentPort.groovy",   dest: "30slaveAgentPort.groovy" }
+    - { src: "setNumOfExecutors.groovy",   dest: "30setNumOfExecutors.groovy" }
     - { src: "setEMailSettings.groovy", dest: "30setEMailSettings.groovy" }
     - { src: "getAPIToken.groovy", dest: "30getAPIToken.groovy" }
     - { src: "setSSHDConfig.groovy", dest: "30setSSHDConfig.groovy" }

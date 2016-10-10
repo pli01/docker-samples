@@ -79,3 +79,4 @@ jenkins_plugins_extra: []
 
 jenkins_proxy_host: "localhost"
 jenkins_proxy_port: "8888"
+jenkins_num_executors: 3
