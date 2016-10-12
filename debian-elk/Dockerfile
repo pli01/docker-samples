@@ -16,7 +16,7 @@ RUN apt-get -qqy update && \
 
 # Get playbook (ansible-pull like from http)
 #RUN ansible -i 'localhost,' -c local localhost -m unarchive -a 'dest=/local/${dest} copy=no src=${url}' -vv
-RUN ansible -i 'localhost,' -c local localhost -m git -a 'repo=${url} dest=/local/${dest} clone=yes update=no' -vv
+RUN ansible -i 'localhost,' -c local localhost -m git -a 'repo=${url} dest=/local/${dest} clone=yes update=yes' -vv
 
 # Run Ansible to configure the Docker image
 RUN cd ${dest} && \
