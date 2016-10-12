@@ -1,0 +1,4 @@
+elk:
+  build: .
+  ports:
+    - "80:80"
