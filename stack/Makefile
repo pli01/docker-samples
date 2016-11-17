@@ -5,6 +5,7 @@ all:
 config:
 	docker-compose -f $(DOCKER_COMPOSE_FILE) config
 up: config
+	export SSH_KEY="$$(cat ~/.ssh/id_rsa.pub)" ; \
 	docker-compose -f $(DOCKER_COMPOSE_FILE) up -d
 stop:
 	docker-compose -f $(DOCKER_COMPOSE_FILE) stop

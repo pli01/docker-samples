@@ -32,7 +32,7 @@ services:
     options:
       syslog-address: "udp://172.18.2.10:514"
 #      syslog-format: rfc3164
-      syslog-tag: "{{.ImageName}}/{{.Name}}/{{.ID}}"
+      tag: "{{.ImageName}}/{{.Name}}/{{.ID}}"
 
 # log service listen and forward to elk
  log:
