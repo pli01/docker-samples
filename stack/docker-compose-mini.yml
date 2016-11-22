@@ -1,7 +1,7 @@
 version: '2'
 # define network
 networks:
-  default:
+  front:
     driver: bridge
     driver_opts:
       com.docker.network.enable_ipv6: "false"
@@ -10,48 +10,36 @@ networks:
       driver: default
       config:
       - subnet: 172.18.0.0/16
+  back:
+    driver: bridge
+    driver_opts:
+      com.docker.network.enable_ipv6: "false"
+      com.docker.network.enable_ipv4: "true"
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.19.0.0/16
+
 #
 # define services
 services:
- tinyproxy:
+ ctx:
   image: debian-ssh:latest
-  links:
-    - log
   expose:
     - "22"
-  networks:
-      default:
-        ipv4_address: 172.18.2.1
   environment:
     - SSH_KEY
-# log service listen and forward to elk
- log:
+  networks:
+    - front
+ ctb:
   image: debian-ssh:latest
-  ports:
+  expose:
     - "22"
+  environment:
+    - SSH_KEY
+  networks:
+    - back
+
 #  networks:
 #      default:
 #        ipv4_address: 172.18.2.2
-  environment:
-    - SSH_KEY
-
-# rabbitmq service (optionnal)
- rabbitmq:
-  image: debian-ssh:latest
-  expose:
-    - "22"
-  networks:
-      default:
-        ipv4_address: 172.18.2.3
-  environment:
-    - SSH_KEY
-
- web:
-  image: debian-ssh:latest
-  networks:
-      default:
-        ipv4_address: 172.18.2.4
-  environment:
-    - SSH_KEY
-  ports:
-    - "2222:22"
