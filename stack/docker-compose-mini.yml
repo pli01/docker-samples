@@ -14,9 +14,9 @@ networks:
 # define services
 services:
  ctx:
-#  image: debian-ssh:latest
-  image: debian/jessie:latest
-  entrypoint: /sbin/init
+  image: debian-ssh:latest
+#  image: debian/jessie:latest
+#  entrypoint: /sbin/init
   expose:
     - "22"
   environment:
