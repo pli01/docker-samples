@@ -1,0 +1,49 @@
+#!/bin/bash
+
+echo "Called as: $*" >> log
+
+function get_container_id(){
+	docker ps -a -f name=stack -q
+}
+
+function get_container_host(){
+	docker inspect -f '{{.Name | printf "\"%s\"," }}'  $(docker ps -q -f name=stack) |sed -e 's|/||g'
+}
+
+function get_container_list(){
+	docker inspect -f '{{.Name | printf "\"%s\": {" }} "ansible_ssh_host": "{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}"},'  $(docker ps -q -f name=stack)|sed -e 's|/||g'
+}
+
+if [ "$1" == "--list" ] ; then
+
+cat<<EOF
+{
+  "bash_hosts": {
+	"hosts": [
+	  $( get_container_host )
+	],
+	"vars": {
+          "ansible_ssh_user": docker,
+          "ansible_ssh_port": 22,
+	}
+  },
+  "_meta": {
+	"hostvars": {
+	  $( get_container_list )
+	  }
+  }
+} 
+EOF
+elif [ "$1" == "--host" ]; then
+  echo '{"_meta": {"hostvars": {}}}'
+else
+  echo "{ }"
+fi
+
+
+#if [ "$1" == "--list" ] ; then
+#  echo '{ "localhost" : [ "localhost" ] }'
+#else
+#  echo '{ "some_variable": "some value" }'
+#fi
+#

@@ -1,0 +1,9 @@
+[common:children]
+web
+app
+
+[web]
+stack_ctx_1
+
+[app]
+stack_ctx_2
