@@ -26,5 +26,6 @@ scale:
         docker-compose $(COMPOSE_ARGS) scale $(SCALE)
 show:
 	@docker inspect -f '{{.Name | printf "[%s]\n" }}{{ .Name }} ansible_ssh_host={{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}} ansible_ssh_user=docker'  $$(docker ps -q -f name=$(PROJECT))|sed -e 's|/||g'
-test-ssh: inventory
-	export ANSIBLE_HOST_KEY_CHECKING=False ; ansible -i inventory 'all' -m shell -a "uname -a"
+
+test-ssh: inventory.d
+	export ANSIBLE_HOST_KEY_CHECKING=False ; ansible -i inventory.d 'all' -m shell -a "uname -a"
