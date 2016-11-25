@@ -5,3 +5,6 @@
 - name: Ensure Java is installed.
   apt: "name={{ item }} state=present"
   with_items: "{{ default_packages }}"
+
+- name: Upgrade apt
+  apt: upgrade=yes

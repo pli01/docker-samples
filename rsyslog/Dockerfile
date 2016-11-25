@@ -16,7 +16,7 @@ RUN sed -i -e 's/#$ModLoad imudp/$ModLoad imudp/' /etc/rsyslog.conf && \
     sed -i -e 's/#$InputTCPServerRun 514/$InputTCPServerRun 514/' /etc/rsyslog.conf
 
 ADD logstash-json.conf /etc/rsyslog.d/01-logstash-json.conf
-ADD jsonparse.conf /etc/rsyslog.d/01-jsonparse.conf
+ADD jsonparse.conf /etc/rsyslog.d/02-jsonparse.conf
 ADD output.conf /etc/rsyslog.d/99-output.conf
 
 EXPOSE 514/tcp 514/udp

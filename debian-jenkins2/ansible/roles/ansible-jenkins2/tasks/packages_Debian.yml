@@ -22,16 +22,18 @@
     # Allows running tasks as unprivileged users, which we need to do when running Jenkins CLI.
     # Reference: https://docs.ansible.com/ansible/become.html#becoming-an-unprivileged-user
     - acl
+    - apt-transport-https
 
 - name: Jenkins APT Key
   apt_key:
-    url: "http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key"
+    url: "https://pkg.jenkins.io/debian/jenkins.io.key"
     state: present
+    validate_certs: no
   become: true
 
 - name: Jenkins APT Repository
   apt_repository:
-    repo: "deb http://pkg.jenkins-ci.org/debian binary/"
+    repo: "deb https://pkg.jenkins.io/debian binary/"
     state: present
     update_cache: yes
   become: true

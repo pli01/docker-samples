@@ -42,6 +42,7 @@ jenkins:
 jenkins_plugins_recommended: 
   - role-strategy
   - email-ext
+  - mask-passwords
   - audit-trail
   - build-pipeline-plugin
   - copy-project-link

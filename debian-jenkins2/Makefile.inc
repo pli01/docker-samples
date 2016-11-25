@@ -1,1 +1,1 @@
-name ?= pli/jenkins2
+name ?= pli/jenkins

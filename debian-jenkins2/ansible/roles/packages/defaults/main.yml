@@ -3,3 +3,4 @@ default_packages:
   - openssh-client
   - sudo
   - curl
+  - aptitude
