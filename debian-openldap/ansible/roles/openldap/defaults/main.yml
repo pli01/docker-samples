@@ -1,0 +1,24 @@
+---
+# Variables in this file are automatically included into the role's context,
+# and can be overridden by the active play.
+# (Other files in this directory must be included via an `include_vars` task.)
+slapd_database:
+  meta_org:
+     - database           meta
+     - readonly           yes
+     - suffix             "ou=Meta,dc=proxy,dc=local"
+     - rootdn             "cn=admin,ou=Meta,dc=proxy,dc=local"
+     - rootpw             {SSHA}WZQsXoB9r6/GdeVK5GBBMH+5niLaaase
+     - chase-referrals    no
+     - uri ldap://ldap.local:389/ou=UU,ou=Meta,dc=proxy,dc=local
+     - suffixmassage     "ou=Org,ou=Meta,dc=proxy,dc=local" "dc=my,dc=org"
+     - idassert-bind      bindmethod=simple binddn="cn=user,dc=my,dc=org" credentials="pwd" mode=none flags=non-prescriptive
+     - idassert-authzFrom "dn.exact:cn=admin,ou=Meta,dc=proxy,dc=local" 
+
+  local:
+     - database           bdb
+     - suffix             "dc=proxy,dc=local"
+     - rootdn             "cn=admin,dc=proxy,dc=local"
+     - rootpw             {SSHA}WZQsXoB9r6/GdeVK5GBBMH+5niLaaase
+     - directory          /var/lib/ldap/proxybdb
+slapd_remove_database: ''

@@ -1,0 +1,5 @@
+- hosts: stack_ctx_1
+  become: true
+  roles:
+    - openldap
+

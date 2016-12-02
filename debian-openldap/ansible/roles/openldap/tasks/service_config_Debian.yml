@@ -1,0 +1,55 @@
+---
+# This file is not included by default. It can be included via a task:
+# include: "service_config_{{ ansible_os_family }}.yml"
+
+#- name: Configure Port
+#  lineinfile:
+#    dest: /etc/default/slapd
+#    regexp: ^HTTP_PORT= 
+#    line: "HTTP_PORT={{ slapd_port }}"
+#  become: true
+#  notify:
+#    - "Restart Service 'slapd'"
+#
+#
+# generic template
+- name: remove slapd.s dir
+  file:
+    path: /etc/ldap/slapd.d/
+    state: absent
+
+- name: create slapd.conf dir
+  file:
+    path: /etc/ldap/slapd.conf.d/
+    state: directory
+    owner: openldap
+    group: openldap
+    mode: 0755
+  become: true
+
+- name: create slapd.conf dir
+  file:
+    path: /var/lib/ldap/proxybdb
+    state: directory
+    owner: openldap
+    group: openldap
+    mode: 0755
+  become: true
+
+- name: generate slapd.conf templates
+  template: src="slapd.conf.j2" dest="/etc/ldap/slapd.conf"
+  notify:
+    - Restart Service 'slapd'
+  tags: [configuration,slapd] 
+
+- name: generate slapd-database.conf templates
+  template: src="slapd-database.conf.j2" dest="/etc/ldap/slapd.conf.d/{{ item }}.conf"
+  with_items: "{{ slapd_database.keys() | difference(slapd_remove_database) }}"
+  notify:
+    - Restart Service 'slapd'
+  tags: [configuration,slapd] 
+# Fire any pending restart handlers now. This is needed to ensure that any 
+# port or prefix changes are applied before the rest of the config, and to 
+# ensure that the first-run setup wizard is disabled.
+
+- meta: flush_handlers

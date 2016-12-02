@@ -1,0 +1,6 @@
+---
+- name: Restart Service 'slapd'
+  service:
+    name: slapd
+    state: restarted
+  become: true

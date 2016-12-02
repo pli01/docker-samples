@@ -1,0 +1,28 @@
+---
+# This file is not included by default. It can be included via a task:
+# include: "packages_{{ ansible_os_family }}.yml"
+
+##
+# That will also install the dependencies automagically.
+##
+
+- name: Update APT Cache
+  apt:
+    update_cache: yes
+    cache_valid_time: 86400
+
+- name: Install OS Dependencies
+  apt: name={{ item }} state=installed
+  become: true
+  with_items:
+    # The uri module requires httplib2, prior to Ansible 2.1.
+    - python-httplib2
+    # Reference: https://docs.ansible.com/ansible/become.html#becoming-an-unprivileged-user
+    - acl
+    - apt-transport-https
+
+- name: Install Openldap
+  apt:
+    name: slapd
+    state: latest
+  become: true

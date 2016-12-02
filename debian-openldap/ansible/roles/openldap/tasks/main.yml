@@ -1,0 +1,16 @@
+---
+- name: Include OS-specific variables
+  include_vars: "{{ ansible_os_family }}.yml"
+
+# Install all OS packages (including openldap itself).
+- include: "packages_{{ ansible_os_family }}.yml"
+
+# Configure the service's launch options.
+- include: "service_config_{{ ansible_os_family }}.yml"
+
+- name: Ensure Service 'slapd' Is Running
+  service:
+    name: slapd
+    state: started
+    enabled: yes
+  become: true

@@ -1,0 +1,37 @@
+
+modulepath /usr/lib/ldap
+moduleload back_bdb.la
+#add module if meta use
+moduleload back_ldap.la
+moduleload back_meta.la
+
+include         /etc/ldap/schema/core.schema
+include         /etc/ldap/schema/cosine.schema
+include         /etc/ldap/schema/inetorgperson.schema
+include         /etc/ldap/schema/nis.schema
+include         /etc/ldap/schema/openldap.schema
+include         /etc/ldap/schema/dyngroup.schema
+
+pidfile         /var/run/slapd/slapd.pid
+argsfile        /var/run/slapd/slapd.args
+
+logfile         /var/log/slapd.log
+#definition tls if use
+
+#######################################################################
+# Global ACL
+#######################################################################
+
+access to dn.exact="" by * read
+access to dn.exact="cn=Subschema" by * read
+access to dn.subtree="dc=proxy,dc=local"
+       by dn.exact="cn=admin,dc=proxy,dc=local" write
+       by dn.exact="cn=admin,ou=Meta,dc=proxy,dc=local" write
+       by users read
+       by anonymous auth
+       by * none
+access to * by * none
+
+{% for v in slapd_database.keys() %}
+include /etc/ldap/slapd.conf.d/{{ v }}.conf
+{% endfor %}
