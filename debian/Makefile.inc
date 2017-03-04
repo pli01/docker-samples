@@ -1,1 +1,1 @@
-name ?= debian
+name ?= debian-jessie

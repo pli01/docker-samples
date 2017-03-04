@@ -1,4 +1,4 @@
-FROM debian:latest
+FROM debian-jessie:latest
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get -qqy update && \
     apt-get install -y ansible && \

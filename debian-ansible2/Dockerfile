@@ -1,4 +1,4 @@
-FROM debian:latest
+FROM debian-jessie:latest
 ARG DEBIAN_FRONTEND=noninteractive
 RUN echo 'deb http://httpredir.debian.org/debian jessie-backports main' > /etc/apt/sources.list.d/jessie-backports.list
 RUN apt-get -qqy update && \

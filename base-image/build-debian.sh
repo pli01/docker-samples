@@ -4,8 +4,8 @@
 #
 # export http_proxy
 
-export distrib=debian
-export version=jessie
+export DISTRIB=${DISTRIB:-debian}
+export VERSION=${VERSION:-jessie}
 export arch=amd64
 export url=http://httpredir.debian.org/debian
 
@@ -14,5 +14,5 @@ export url=http://httpredir.debian.org/debian
 
 pkg="locales,apt-utils,inetutils-ping,iproute2,sysvinit-core,apt,bash"
 
-/usr/share/docker-engine/contrib/mkimage.sh -t $distrib-base:latest -d . debootstrap \
-  --arch=$arch --variant=minbase --components=main --include=$pkg $version $url
+/usr/share/docker-ce/contrib/mkimage.sh -t $DISTRIB-$VERSION-base:latest -d . debootstrap \
+  --arch=$arch --variant=minbase --components=main --include=$pkg $VERSION $url

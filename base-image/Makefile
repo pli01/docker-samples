@@ -6,3 +6,6 @@ build: build-$(DISTRIB)
 
 build-$(DISTRIB): build-$(DISTRIB).sh
 	[ -x build-$(DISTRIB).sh ] && sudo -E bash -x build-$(DISTRIB).sh
+
+clean:
+	-rm -rf Dockerfile rootfs.tar.xz
