@@ -1,0 +1,8 @@
+#!/bin/bash
+echo "### $1"
+case "$1" in
+  elasticsearch) /usr/sbin/service node1_elasticsearch start ;
+  tail -f /var/log/elasticsearch/localhost-node1/elasticsearch*.log
+ ;;
+  *) exec $1 ;;
+esac
