@@ -1,0 +1,9 @@
+---
+es_enable_xpack: true
+es_api_basic_auth_username: es_admin
+es_api_basic_auth_password: changeme
+es_config: {
+#   network.host: "_local_"
+#   http.host: _site_,
+#   transport.host: _local_,
+}

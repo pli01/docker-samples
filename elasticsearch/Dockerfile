@@ -16,9 +16,11 @@ RUN apt-get -qqy update && \
 RUN mkdir -p /opt && \
     cd /opt && git clone https://github.com/pli01/ansible-elasticsearch  && \
     mkdir -p /opt/playbooks/roles && \
+    mkdir -p /opt/playbooks/group_vars && \
     cd /opt/playbooks && ln -sf /opt/ansible-elasticsearch roles/elasticsearch && \
     cp /opt/ansible-elasticsearch/site.yml .
 
+COPY group_vars  /opt/playbooks/group_vars/all
 RUN ( cd /opt/playbooks && ansible-playbook -i localhost, -c local site.yml -v )
 
 USER root
