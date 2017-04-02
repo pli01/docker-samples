@@ -5,7 +5,7 @@
 # Run with:
 # docker run -p 5601:5601 -p 9200:9200 -p 5044:5044 -p 5000:5000 -it --name elk <repo-user>/elk
 
-FROM elk:5.2.2
+FROM elk:5.3.0
 # filters
 #ADD 03-rabbitmq-input.conf /etc/logstash/conf.d/03-rabbitmq-input.conf
 ADD 04-syslog-input.conf /etc/logstash/conf.d/04-syslog-input.conf
