@@ -1,0 +1,29 @@
+version: '2'
+# define network
+#networks:
+#  front:
+#    driver: bridge
+#    driver_opts:
+#      com.docker.network.enable_ipv6: "false"
+#      com.docker.network.enable_ipv4: "true"
+#    ipam:
+#      driver: default
+#      config:
+#      - subnet: 192.168.0.0/24
+#
+# define services
+services:
+ ctx:
+  image: nginx:latest
+#  entrypoint: /sbin/init
+  expose:
+    - "80"
+  environment:
+    - SSH_KEY
+  network_mode: "host"
+
+#  networks:
+#    - front
+#  networks:
+#      default:
+#        ipv4_address: 172.18.2.2

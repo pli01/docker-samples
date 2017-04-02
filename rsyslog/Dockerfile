@@ -18,8 +18,9 @@ RUN sed -i -e 's/#$ModLoad imudp/$ModLoad imudp/' /etc/rsyslog.conf && \
 ADD logstash-json.conf /etc/rsyslog.d/01-logstash-json.conf
 ADD jsonparse.conf /etc/rsyslog.d/02-jsonparse.conf
 ADD output.conf /etc/rsyslog.d/99-output.conf
+ADD start.sh /start.sh
+RUN chmod +x /start.sh
 
 EXPOSE 514/tcp 514/udp
 
-ENTRYPOINT ["/usr/sbin/rsyslogd"]
-CMD ["-n"]
+CMD ["/start.sh"]

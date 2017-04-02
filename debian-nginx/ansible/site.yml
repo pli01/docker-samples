@@ -26,18 +26,33 @@
       when: ansible_os_family == "Debian"
 
     - name: copy site
-      copy: 
+      copy:
          src: "{{ item }}.conf"
          dest: "{{nginx_conf_dir}}/conf.d/{{ item }}.conf"
          mode: "0644"
       with_items:
         - "kibana"
 
-    - name: Remove links for sites-enabled
-      file: state=absent path={{nginx_conf_dir}}/conf.d/{{ item }}.conf
-      with_items:
-        - "default"
+#### for defautl debian nginx container
+    - name: include json format
+      lineinfile: dest={{nginx_conf_dir}}/nginx.conf insertafter='http {' line="include    /etc/nginx/json.conf;"
 
+    - name: copy json.conf
+      copy:
+         src: "{{ item }}.conf"
+         dest: "{{nginx_conf_dir}}/{{ item }}.conf"
+         mode: "0644"
+      with_items:
+        - "json"
+
+
+
+#
+#    - name: Remove links for sites-enabled
+#      file: state=absent path={{nginx_conf_dir}}/conf.d/{{ item }}.conf
+#      with_items:
+#        - "default"
+#
 
 #### for defautl debian nginx container
 #    - name: daemon off
@@ -49,7 +64,7 @@
 #         dest: /var/www/html/index.html
 #         mode: "0644"
 #    - name: copy site
-#      copy: 
+#      copy:
 #         src: "{{ item }}.conf"
 #         dest: "{{nginx_conf_dir}}/sites-available/{{ item }}.conf"
 #         mode: "0644"

@@ -29,3 +29,24 @@ show:
 
 test-ssh: inventory.d
 	export ANSIBLE_HOST_KEY_CHECKING=False ; ansible -i inventory.d 'all' -m shell -a "uname -a"
+
+stack-up: log-up elk-up web-up
+stack-rm: log-rm elk-rm web-rm
+
+elk-up:
+	make DOCKER_COMPOSE_FILE=docker-compose-elk.yml PROJECT=elk up
+
+log-up:
+	make DOCKER_COMPOSE_FILE=docker-compose-log.yml PROJECT=log up
+
+web-up:
+	make DOCKER_COMPOSE_FILE=docker-compose-web.yml PROJECT=web up
+
+elk-rm:
+	make DOCKER_COMPOSE_FILE=docker-compose-elk.yml PROJECT=elk rm
+
+log-rm:
+	make DOCKER_COMPOSE_FILE=docker-compose-log.yml PROJECT=log rm
+
+web-rm:
+	make DOCKER_COMPOSE_FILE=docker-compose-web.yml PROJECT=web rm

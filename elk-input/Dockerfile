@@ -5,10 +5,12 @@
 # Run with:
 # docker run -p 5601:5601 -p 9200:9200 -p 5044:5044 -p 5000:5000 -it --name elk <repo-user>/elk
 
-FROM elk:latest
+FROM elk:5.2.2
 # filters
 #ADD 03-rabbitmq-input.conf /etc/logstash/conf.d/03-rabbitmq-input.conf
 ADD 04-syslog-input.conf /etc/logstash/conf.d/04-syslog-input.conf
+#ADD get.sh /get.sh
+#RUN chmod +x /get.sh && bash -x /get.sh
 
 EXPOSE 5601 9200 9300 5000 5044 10514/udp
 VOLUME /var/lib/elasticsearch

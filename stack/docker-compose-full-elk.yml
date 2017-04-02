@@ -1,0 +1,48 @@
+version: '2'
+# define network
+networks:
+  default:
+    driver: bridge
+    driver_opts:
+      com.docker.network.enable_ipv6: "false"
+      com.docker.network.enable_ipv4: "true"
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.18.0.0/16
+#
+# define services
+services:
+# log service listen and forward to elk
+ log:
+  image: rsyslog:latest
+  links:
+    - elk
+  ports:
+    - "514/tcp:514/tcp"
+    - "514/udp:514/udp"
+  networks:
+      default:
+        ipv4_address: 172.18.2.10
+
+# elk service , logstash listen to syslog message and send to elasticsearch, view in kibana
+ elk:
+#  image: elk:latest
+  image: pli/elk:latest
+  environment:
+    ES_HEAP_SIZE: 1g
+  expose:
+    - "5601"
+    - "9200"
+    - "5044"
+    - "5000"
+    - "10514/udp"
+
+# rpx service host virtualhost for / (elk), /jenkins, /rabbitmq
+ web:
+  image: nginx:latest
+  links:
+    - elk
+    - log
+  ports:
+    - "80:80"

@@ -1,0 +1,12 @@
+version: '2'
+# define services
+services:
+# rpx service host virtualhost for / (elk), /jenkins, /rabbitmq
+ web:
+  image: nginx:latest
+  ports:
+    - "80:80"
+  network_mode: "host"
+  extra_hosts:
+    - "log:149.202.174.106"
+    - "elk:149.202.174.106"

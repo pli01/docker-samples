@@ -1,0 +1,12 @@
+version: '2'
+# define services
+services:
+# log service listen and forward to elk
+ log:
+  image: rsyslog:latest
+  ports:
+    - "514/tcp:514/tcp"
+    - "514/udp:514/udp"
+  network_mode: "host"
+  extra_hosts:
+    - "elk:149.202.174.106"

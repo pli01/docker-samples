@@ -1,0 +1,15 @@
+version: '2'
+# define services
+services:
+# elk service , logstash listen to syslog message and send to elasticsearch, view in kibana
+ elk:
+  image: pli/elk:latest
+  environment:
+    ES_HEAP_SIZE: 1g
+  expose:
+    - "5601"
+    - "9200"
+    - "5044"
+    - "5000"
+    - "10514/udp"
+  network_mode: "host"
