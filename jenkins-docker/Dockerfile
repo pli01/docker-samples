@@ -28,4 +28,7 @@ RUN echo "jenkins ALL=NOPASSWD: ALL" >> /etc/sudoers ; \
     adduser jenkins docker && \
     adduser jenkins staff
 
+COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
+RUN install-plugins.sh < /usr/share/jenkins/ref/plugins.txt
+
 USER jenkins
