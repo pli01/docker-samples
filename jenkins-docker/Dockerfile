@@ -31,4 +31,8 @@ RUN echo "jenkins ALL=NOPASSWD: ALL" >> /etc/sudoers ; \
 COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
 RUN install-plugins.sh < /usr/share/jenkins/ref/plugins.txt
 
+RUN apt-get -qqy update && \
+    apt-get install -qy python-pip && \
+    pip install jenkins-job-builder
+
 USER jenkins
